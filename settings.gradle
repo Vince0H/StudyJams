@@ -1,1 +1,1 @@
-include ':firstApp', ':birthday', ':myorder', ':courtcounter'
+include ':firstApp', ':birthday', ':myorder', ':courtcounter', ':cn.studyjams.s1.sj46.huangyongsheng'

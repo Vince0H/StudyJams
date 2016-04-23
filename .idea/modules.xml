@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/StudyJams.iml" filepath="$PROJECT_DIR$/StudyJams.iml" />
       <module fileurl="file://$PROJECT_DIR$/birthday/birthday.iml" filepath="$PROJECT_DIR$/birthday/birthday.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cn.studyjams.s1.sj46.huangyongsheng/cn.studyjams.s1.sj46.huangyongsheng.iml" filepath="$PROJECT_DIR$/cn.studyjams.s1.sj46.huangyongsheng/cn.studyjams.s1.sj46.huangyongsheng.iml" />
       <module fileurl="file://$PROJECT_DIR$/courtcounter/courtcounter.iml" filepath="$PROJECT_DIR$/courtcounter/courtcounter.iml" />
       <module fileurl="file://$PROJECT_DIR$/firstApp/firstApp.iml" filepath="$PROJECT_DIR$/firstApp/firstApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/myorder/myorder.iml" filepath="$PROJECT_DIR$/myorder/myorder.iml" />

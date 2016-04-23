@@ -1,9 +1,14 @@
 package the.vince.myorder;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.NumberFormat;
 
@@ -23,11 +28,74 @@ public class OrderActivity extends AppCompatActivity {
      * @param v
      */
     public void submitOrder(View v) {
-        int price = number * 5;
-        //在价格的前面显示 人民币的符号
-        String priceMessage = "Total : " + NumberFormat.getCurrencyInstance().format(price);
-        priceMessage += "\nThank you!";
+        //获取名字
+        EditText et_name = (EditText) findViewById(R.id.et_name);
+        String name = et_name.getText().toString().trim();
+
+        //是否添加cream
+        CheckBox cb_WCream = (CheckBox) findViewById(R.id.cb_whipped);
+        boolean hasWhippedCream = cb_WCream.isChecked();
+
+        //是否添加chocolate
+        CheckBox cb_chocolate = (CheckBox) findViewById(R.id.cb_chocolate);
+        boolean hasChocolate = cb_chocolate.isChecked();
+
+        //获取价格
+        int price = calculatePrice(hasWhippedCream, hasChocolate);
+        //获取清单
+        String priceMessage = createOrderSummary(name, price, hasWhippedCream, hasChocolate);
+        //显示清单
         displayMessage(priceMessage);
+
+        sendToEmail(priceMessage);
+    }
+
+    /**
+     * 发送Email
+     * @param priceMessage
+     */
+    private void sendToEmail(String priceMessage) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_SUBJECT,"This email from SJ46");
+        intent.putExtra(Intent.EXTRA_TEXT,priceMessage);
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        }
+    }
+
+
+    private int calculatePrice(boolean hasWhippedCream, boolean hasChocolate) {
+        int price = 5;
+        //加 WhippedCream 加1块
+        if (hasWhippedCream == true) {
+            price++;
+        }
+        //加 hasChocolate 加2块
+        if (hasChocolate == true) {
+            price += 2;
+        }
+        return number * price;
+    }
+
+    /**
+     * 显示清单
+     *
+     * @param name
+     * @param price
+     * @param hasWhippedCream
+     * @param hasChocolate
+     * @return
+     */
+    private String createOrderSummary(String name, int price, boolean hasWhippedCream, boolean
+            hasChocolate) {
+        String priceMessage = "name: " + name;
+        priceMessage += "\nAdd Whipped cream ?" + hasWhippedCream;
+        priceMessage += "\nAdd hasChocolate ?" + hasChocolate;
+        priceMessage += "\nQuantity:" + number;
+        priceMessage += "\nTotal : " + NumberFormat.getCurrencyInstance().format(price);
+        priceMessage += "\nThank you!";
+        return priceMessage;
     }
 
     /**
@@ -36,6 +104,11 @@ public class OrderActivity extends AppCompatActivity {
      * @param v
      */
     public void increment(View v) {
+        //设置上限
+        if (number == 100) {
+            Toast.makeText(this,"You cannot have more than 100 coffees",Toast.LENGTH_SHORT).show();
+            return;
+        }
         number++;
         display(number);
     }
@@ -46,11 +119,12 @@ public class OrderActivity extends AppCompatActivity {
      * @param v
      */
     public void decrement(View v) {
-        number--;
         //防止减少到0以下
-        if (number < 0) {
-            number = 0;
+        if (number == 1) {
+            Toast.makeText(this,"You cannot have less than 1 coffees",Toast.LENGTH_SHORT).show();
+            return;
         }
+        number--;
         display(number);
     }
 
@@ -72,7 +146,7 @@ public class OrderActivity extends AppCompatActivity {
      */
     private void displayMessage(String priceMessage) {
         //获取显示的控件
-        TextView tv_displayPrice = (TextView) findViewById(R.id.price_text_view);
+        TextView tv_displayPrice = (TextView) findViewById(R.id.order_summary_text_view);
         //设置TextView的数值
         tv_displayPrice.setText(priceMessage);
     }
